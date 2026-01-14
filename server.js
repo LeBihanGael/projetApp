@@ -9,8 +9,9 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/info', (req, res) => {
-    res.json({ status: 'Server is running', version: '1.0.0' });
+  res.json({ cle1: 'valeur1', cle2: 'valeur2' });
 });
+
 
 app.post('/register', (req, res) => {
     console.log('Données reçues');
