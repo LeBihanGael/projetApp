@@ -1,8 +1,14 @@
-const expres = require('express');
-const app = expres();
+const express = require('express');
+const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello Express!');
+app.use(express.static('public'));
+
+app.get('/login', (req, res) => {
+    res.send('<h1>Login Page</h1>');
+});
+
+app.post('/register', (req, res) => {
+    res.send('Register Page');
 });
 
 app.listen(3000, () => {
