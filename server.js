@@ -2,13 +2,20 @@ const express = require('express');
 const app = express();
 
 app.use(express.static('public'));
+app.use(express.json());
 
 app.get('/login', (req, res) => {
     res.send('<h1>Login Page</h1>');
 });
 
+app.get('/info', (req, res) => {
+    res.json({ status: 'Server is running', version: '1.0.0' });
+});
+
 app.post('/register', (req, res) => {
-    res.send('Register Page');
+    console.log('Données reçues');
+    console.log(req.body);
+        res.json({ message: 'Données reçues avec succès' });
 });
 
 app.listen(3000, () => {
