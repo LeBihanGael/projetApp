@@ -1,5 +1,6 @@
 const myInput = document.getElementById("myI");
 const myButton = document.getElementById("myB");
+const myInput2 = document.getElementById("myP");
 
 myButton.addEventListener("click", () => {
     fetch('/register', {
@@ -7,7 +8,7 @@ myButton.addEventListener("click", () => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ input: myInput.value })
+        body: JSON.stringify({ login: myInput.value, password: myInput2.value })
     })
     .then(response => response.text())
     .then(data => {

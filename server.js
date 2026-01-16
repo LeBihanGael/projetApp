@@ -31,10 +31,22 @@ app.get('/info', (req, res) => {
 
 
 app.post('/register', (req, res) => {
-    console.log('Données reçues');
-    console.log(req.body);
-        res.json({ message: 'Données reçues avec succès' });
+
+connection.query(
+  'INSERT INTO User (login, password) VALUES (?, ?)',
+  [req.body.login, req.body.password],
+  (err, results) => {
+    if (err) {
+      console.error('Erreur lors de l\'insertion dans la base de données :', err);
+      res.status(500).json({ message: 'Erreur serveur' });
+      return;
+    }
+    console.log('Insertion réussie, ID utilisateur :', results.insertId);
+    res.json({ message: 'Inscription réussie !', userId: results.insertId });
+  }
+);
 });
+
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
