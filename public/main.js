@@ -18,5 +18,8 @@ myButton.addEventListener("click", () => {
 const infoButton = document.getElementById("myB2");
 
 infoButton.addEventListener("click", () => {
-    fetch('/info').then(response => response.json()).then(data => alert(data.cle1));
+    fetch('/info').then(response => response.json()).then(data => {
+        document.getElementById("reponse").innerHTML = data.cle1;
+    });
 });
+
