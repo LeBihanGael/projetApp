@@ -15,7 +15,7 @@ connection.connect((err) => {
     console.error('Erreur de connexion à la base de données :', err);
     return;
   }
-  console.log('Connecté à la base de données MySQL.');  
+  console.log('Connecté à la base de données MySQL.');
 });
 
 app.use(express.static('public'));
@@ -26,7 +26,19 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/info', (req, res) => {
-  res.json({ cle1: 'Hello World', cle2: 'valeur2' });
+  res.json({ cle1: 'Vert', cle2: 'valeur2' });
+});
+
+app.get('/users', (req, res) => {
+  connection.query('SELECT * FROM User', (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération des utilisateurs :', err);
+      res.status(500).json({ message: 'Erreur serveur' });
+      return;
+    }
+    res.json(results);
+  });
+
 });
 
 
@@ -46,6 +58,36 @@ connection.query(
   }
 );
 });
+
+app.post('/vote', (req, res) => {
+  connection.query(
+    'INSERT INTO Vote (id, idUsers) VALUES (?, ?)',
+    [req.body.id, req.body.idUsers],
+    (err, results) => {
+      if (err) {
+        console.error('Erreur lors de l\'insertion dans la base de données :', err);
+        res.status(500).json({ message: 'Erreur serveur' });
+        return;
+      }
+      console.log('Insertion réussie, ID vote :', results.insertId);
+      res.json({ message: 'Insertion réussite !', userId: results.insertId});
+    }
+  );
+});
+
+app.get('/nombre', (req, res) => {
+  connection.query(
+    'SELECT COUNT(login) AS NbVote, login , idUsers FROM User, Vote WHERE User.id = Vote.idUsers GROUP BY idUsers ORDER BY NbVote DESC',
+    (err, results) => {
+      if (err) {
+        console.error('erreur', err);
+        res.status(500).json({ message: 'Erreur serveur' });
+        return;
+      }
+      res.json(results);
+    
+    })
+  });
 
 
 app.listen(3000, () => {
