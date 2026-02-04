@@ -2,21 +2,25 @@ const myInput = document.getElementById("myI");
 const myButton = document.getElementById("myB");
 const myInput2 = document.getElementById("myP");
 const boutonSelectedUsers = document.getElementById("boutonSelectedUsers");
+const userId = localStorage.getItem('userId');
 
 boutonSelectedUsers.addEventListener("click", () => {
     const usersList = document.getElementById("usersList");
     const selectedUserId = usersList.value;
+    
+    
     //("Le user " + selectedUserId + " a voté !");
     fetch('/vote', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ idUsers: selectedUserId })
+        body: JSON.stringify({ idUsers: selectedUserId, idElecteurs: localStorage.getItem('userId') })
     })
     .then(response => response.text())
     .then(data => {
         alert(data);
+    window.location.reload();
     });
 });
 
@@ -78,3 +82,31 @@ function afficheVote() {
         });
     });            
 }
+
+const loginButton = document.getElementById("loginbutton");
+
+loginButton.addEventListener("click", () => {
+    const loginInput = document.getElementById("logininput").value;
+    const passwordInput = document.getElementById("passwordinput").value;
+
+    fetch('/connexion', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ login: loginInput, password: passwordInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        alert("ID utilisateur : " + data.user.id);
+        localStorage.setItem('userId', data.user.id);
+    });
+});
+const decoButton = document.getElementById("decobutton");
+
+decoButton.addEventListener("click", () => {
+    localStorage.removeItem('userId');
+    alert("Déconnecté !");
+    window.location.reload();
+});
